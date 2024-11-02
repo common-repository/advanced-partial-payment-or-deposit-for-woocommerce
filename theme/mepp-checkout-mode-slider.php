@@ -5,35 +5,28 @@ $hide = get_option('mepp_hide_ui_when_forced','no') === 'yes';
 
 <tr  class="deposit-buttons">
     <td colspan="2">
-        <div id='<?php echo $basic_buttons ? 'basic-wc-deposits-options-form' : 'wc-deposits-options-form'; ?>'>
-
-            <div class="<?php echo $hide? 'mepp_hidden ':'' ?>  <?php echo $basic_buttons ? 'basic-switch-Advanced Partial Payment and Deposit For Woocommerce' : 'deposit-options switch-toggle switch-candy switch-Advanced Partial Payment and Deposit For Woocommerce'; ?>">
-                <input id='pay-deposit' name='deposit-radio'
-                       type='radio' <?php echo checked($default_checked, 'deposit'); ?> class='input-radio'
-                       value='deposit'>
-                <label id="pay-deposit-label"
-                       for='pay-deposit'><?php echo esc_html__($deposit_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
-                <?php if ($basic_buttons) { ?> <br/> <?php } ?>
-                <?php if (isset($force_deposit) && $force_deposit === 'yes') { ?>
-                    <input id='pay-full-amount' name='deposit-radio' type='radio'
-                           class='input-radio'
-                           disabled>
-                    <label id="pay-full-amount-label" for='pay-full-amount'
-                           onclick=''><?php echo esc_html__($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
-                <?php } else { ?>
-                    <input id='pay-full-amount' name='deposit-radio'
-                           type='radio' <?php echo checked($default_checked, 'full');; ?> class='input-radio'
-                           value='full'>
-                    <label id="pay-full-amount-label" for='pay-full-amount'
-                           onclick=''><?php echo esc_html__($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
-                <?php } ?>
-                <a class='wc-deposits-switcher'></a>
+        <div class="<?php echo $hide? 'mepp_hidden ':'' ?>  deposit-options switch-toggle switch-candy switch-Advanced">
+            <div class="toggle-switch-woocommerce-deposits">
+                <input id='pay-deposit' name='deposit-radio' type='radio' <?php echo checked($default_checked, 'deposit'); ?> class='input-radio' value='deposit'>
+                <?php if (isset($force_deposit) && $force_deposit === 'yes') : ?>
+                    <input id='pay-full-amount' name='deposit-radio' type='radio' class='input-radio' disabled>
+                <?php else: ?>
+                    <input id='pay-full-amount' name='deposit-radio' type='radio' <?php echo checked($default_checked, 'full');; ?> class='input-radio' value='full'>
+                <?php endif; ?>
+                
+                <label for="pay-deposit"><?php esc_html_e($deposit_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
+                <label for='pay-full-amount'><?php echo esc_html__($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
+                <div class="switch-wrapper">
+                    <div class="switch">
+                        <div><?php esc_html_e($deposit_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></div>
+                        <div><?php esc_html_e($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></div>
+                    </div>
+                </div>
             </div>
-            <span class='deposit-message' id='wc-deposits-notice'></span>
-
         </div>
+        <span class='deposit-message' id='wc-deposits-notice'></span>
 
-        <?php if ($has_payment_plan && $default_checked === 'deposit') { ?>
+        <?php if ($has_payment_plan && $default_checked === 'deposit') : ?>
             <div id="mepp-payment-plans">
                 <fieldset>
                     <ul>
@@ -86,7 +79,7 @@ $hide = get_option('mepp_hide_ui_when_forced','no') === 'yes';
                     </ul>
                 </fieldset>
             </div>
-        <?php } ?>
+        <?php endif; ?>
 
 
     </td>

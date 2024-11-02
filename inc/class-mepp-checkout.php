@@ -245,10 +245,100 @@ class MEPP_Checkout
             'selected_plan' => $selected_plan,
         );
 
-        wc_get_template('mepp-checkout-mode-slider.php', $args, '', MEPP_TEMPLATE_PATH);
-
+       ?>
+        <tr  class="deposit-buttons">
+            <td colspan="2">
+                <?php 
+                    $basic_buttons = $args['basic_buttons'];
+                    if($basic_buttons){
+                        $this->basic_style($args);
+                    }
+                    else{
+                        $this->toggle_style($args);
+                    }
+                ?>
+            </td>
+        </tr>
+        <?php
     }
 
+
+    public function basic_style($args){
+        $hide = get_option('mepp_hide_ui_when_forced','no') === 'yes';
+        $basic_buttons = $args['basic_buttons'];
+        $default_checked = $args['default_checked'];
+        $has_payment_plan = $args['has_payment_plan'];
+        $deposit_text = $args['deposit_text'];
+        $full_text = $args['full_text'];
+    ?>
+        
+        <div class="<?php echo $hide? 'mepp_hidden ':'' ?>  basic-switch-checkout">
+            <label id="pay-deposit-label" class="basic-style" for='pay-deposit'><?php echo esc_html__($deposit_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?>
+                <input id='pay-deposit' name='deposit-radio'
+                    type='radio' <?php echo checked($default_checked, 'deposit'); ?> class='input-radio'
+                    value='deposit'>
+                    <span class="radio-btn"></span>
+            </label>
+            
+            <?php if (isset($force_deposit) && $force_deposit === 'yes') { ?>
+                <label id="pay-full-amount-label" for='pay-full-amount' onclick=''><?php echo esc_html__($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?>
+                    <input id='pay-full-amount' name='deposit-radio' type='radio'
+                        class='input-radio'
+                        disabled>
+                    <span class="radio-btn"></span>
+                </label>
+            <?php } else { ?>
+                <label id="pay-full-amount-label"  class="basic-style" for='pay-full-amount' onclick=''><?php echo esc_html__($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?>
+                    <input id='pay-full-amount' name='deposit-radio'
+                        type='radio' <?php echo checked($default_checked, 'full');; ?> class='input-radio'
+                        value='full'>
+                        <span class="radio-btn"></span>
+                </label>
+            <?php } ?>
+            <a class='wc-deposits-switcher'></a>
+        </div>
+        <span class='deposit-message' id='wc-deposits-notice'></span>
+        
+        <?php if ($has_payment_plan && $default_checked === 'deposit') {
+            do_action('mepp_payment_plan_checkout', $args);
+        }
+    }
+
+    public function toggle_style($args){
+        $hide = get_option('mepp_hide_ui_when_forced','no') === 'yes';
+        $basic_buttons = $args['basic_buttons'];
+        $default_checked = $args['default_checked'];
+        $has_payment_plan = $args['has_payment_plan'];
+        $deposit_text = $args['deposit_text'];
+        $full_text = $args['full_text'];
+        ?>
+        <div class="<?php echo $hide? 'mepp_hidden ':'' ?>  deposit-options switch-toggle switch-candy switch-Advanced">
+            <div class="toggle-switch-woocommerce-deposits">
+                <input id='pay-deposit' name='deposit-radio' type='radio' <?php echo checked($default_checked, 'deposit'); ?> class='input-radio' value='deposit'>
+                <?php if (isset($force_deposit) && $force_deposit === 'yes') : ?>
+                    <input id='pay-full-amount' name='deposit-radio' type='radio' class='input-radio' disabled>
+                <?php else: ?>
+                    <input id='pay-full-amount' name='deposit-radio' type='radio' <?php echo checked($default_checked, 'full');; ?> class='input-radio' value='full'>
+                <?php endif; ?>
+                
+                <label for="pay-deposit"><?php esc_html_e($deposit_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
+                <label for='pay-full-amount'><?php echo esc_html__($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></label>
+                <div class="switch-wrapper">
+                    <div class="switch">
+                        <div><?php esc_html_e($deposit_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></div>
+                        <div><?php esc_html_e($full_text, 'advanced-partial-payment-or-deposit-for-woocommerce'); ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class='deposit-message' id='wc-deposits-notice'></span>
+        
+        <?php if ($has_payment_plan && $default_checked === 'deposit') {
+            do_action('mepp_payment_plan_checkout', $args);
+        }
+        
+    }
+    
     /**
      * @brief adds deposit meta to order line item when created
      * @param $item
